@@ -15,6 +15,7 @@ const Logs = () => {
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ const Logs = () => {
 
   useEffect(() => {
     const fetchLogs = async () => {
+      setLoading(true);
       try {
         const res = await axios.post(
           `${env.BASE_URL}/admin/get-all-logs`,
@@ -40,6 +42,8 @@ const Logs = () => {
         setTotalPages(res.data.data.totalPages || 1);
       } catch (err) {
         console.error("Error fetching logs:", err);
+      } finally {
+        setLoading(false); // Set loading to false after the request completes
       }
     };
 
@@ -103,7 +107,9 @@ const Logs = () => {
           <h3>API Logs</h3>
           <p className="subtitle">Recent API call activities</p>
 
-          {logs.length === 0 ? (
+          {loading ? (
+            <div className="loading">Loading...</div> // Loading spinner/message
+          ) : logs.length === 0 ? (
             <p className="no-logs">No logs available.</p>
           ) : (
             <table className="logs-table">
@@ -119,7 +125,6 @@ const Logs = () => {
                 {logs.map((log, i) => (
                   <tr key={i}>
                     <td>{new Date(log.createdAt).toLocaleString()}</td>
-                    {/* <td>{timeFormat(log.createdAt)}</td> */}
                     <td>
                       <span className={`badge ${log.type}`}>
                         {log.type.replace("_", " ")}
@@ -132,8 +137,12 @@ const Logs = () => {
               </tbody>
             </table>
           )}
+
           <div className="pagination">
-            <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <button
+              disabled={page === 1 || loading} // Disable button if on the first page or while loading
+              onClick={() => setPage(page - 1)}
+            >
               Prev
             </button>
 
@@ -142,7 +151,7 @@ const Logs = () => {
             </span>
 
             <button
-              disabled={page === totalPages}
+              disabled={page === totalPages || loading} // Disable button if on the last page or while loading
               onClick={() => setPage(page + 1)}
             >
               Next

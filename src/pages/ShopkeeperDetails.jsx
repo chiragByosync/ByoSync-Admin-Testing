@@ -15,6 +15,7 @@ const ShopkeeperDetails = () => {
   const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const auth = localStorage.getItem("auth") === "true";
@@ -30,6 +31,7 @@ const ShopkeeperDetails = () => {
   useEffect(() => {
     // ye function tab chalega jab page (component) load hoga
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const res = await axios.post(
           `${env.BASE_URL}/admin/get-data-selected-user`,
@@ -45,6 +47,8 @@ const ShopkeeperDetails = () => {
         setTotalPages(res.data.data.totalPages || 1);
       } catch (err) {
         console.error("Error fetching stats:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -223,32 +227,41 @@ const ShopkeeperDetails = () => {
         <div className="card">
           <h3>API Logs</h3>
           <p className="subtitle">Recent API call activities.</p>
-          <table>
-            <thead>
-              <tr>
-                <th>Start Time</th>
-                <th>Type</th>
-                <th>Message</th>
-                <th>Time Taken</th>
-              </tr>
-            </thead>
-            <tbody>
-              {user?.logs.map((log, i) => (
-                <tr key={i}>
-                  <td>{new Date(log.time).toLocaleString()}</td>
-                  <td>
-                    <span className={`badge ${log.type}`}>
-                      {log.type.replace("_", " ")}
-                    </span>
-                  </td>
-                  <td>{log.message}</td>
-                  <td>{log.timeTaken}</td>
+          {loading ? (
+            <div className="loading">Loading...</div> // Loading spinner/message
+          ) : user?.logs.length === 0 ? (
+            <p className="no-logs">No logs available.</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Start Time</th>
+                  <th>Type</th>
+                  <th>Message</th>
+                  <th>Time Taken</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {user?.logs.map((log, i) => (
+                  <tr key={i}>
+                    <td>{new Date(log.time).toLocaleString()}</td>
+                    <td>
+                      <span className={`badge ${log.type}`}>
+                        {log.type.replace("_", " ")}
+                      </span>
+                    </td>
+                    <td>{log.message}</td>
+                    <td>{log.timeTaken}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
           <div className="pagination">
-            <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+            <button
+              disabled={page === 1 || loading}
+              onClick={() => setPage(page - 1)}
+            >
               Prev
             </button>
 
@@ -257,7 +270,7 @@ const ShopkeeperDetails = () => {
             </span>
 
             <button
-              disabled={page === totalPages}
+              disabled={page === totalPages || loading}
               onClick={() => setPage(page + 1)}
             >
               Next
