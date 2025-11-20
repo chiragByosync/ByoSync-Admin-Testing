@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { env } from "../utils/config.js";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Header = () => {
     console.log("Logout clicked!");
 
     const response = await axios.post(
-      "http://localhost:7000/api/v1/admin/admin-logout",
+      `${env.BASE_URL}/admin/admin-logout`,
       {},
       {
         withCredentials: true,
