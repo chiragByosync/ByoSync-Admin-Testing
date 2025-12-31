@@ -8,6 +8,7 @@ import ShopkeeperDetails from "./pages/ShopkeeperDetails.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import Logs from "./pages/Logs.jsx";
 import Notification from "./pages/Notification.jsx";
+import DeleteUser from "./pages/DeleteUser.jsx";
 
 const App = () => {
   return (
@@ -52,6 +53,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Notification />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/delete-user"
+            element={
+              <ProtectedRoute>
+                <DeleteUser />
               </ProtectedRoute>
             }
           />

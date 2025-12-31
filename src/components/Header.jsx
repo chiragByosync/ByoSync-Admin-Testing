@@ -34,6 +34,12 @@ const Header = () => {
           </button> */}
           <button
             className="logout-btn"
+            onClick={() => navigate("/delete-user")}
+          >
+            <span className="logout-icon">Delete User</span>
+          </button>
+          <button
+            className="logout-btn"
             onClick={() => navigate("/notification")}
           >
             <span className="logout-icon">Sent Notification</span>
