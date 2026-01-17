@@ -87,16 +87,17 @@ const ShopkeeperDetails = () => {
       </>
     );
   }
-  
+
   // Calculate percentages safely
   const success = user?.performance?.success || 0;
   const serverError = user?.performance?.server_error || 0;
   const badRequest = user?.performance?.bad_request || 0;
   const total = success + serverError + badRequest;
-  
+
   const successPercent = total > 0 ? ((success / total) * 100).toFixed(0) : "0";
   const badPercent = total > 0 ? ((badRequest / total) * 100).toFixed(0) : "0";
-  const errorPercent = total > 0 ? ((serverError / total) * 100).toFixed(0) : "0";
+  const errorPercent =
+    total > 0 ? ((serverError / total) * 100).toFixed(0) : "0";
 
   return (
     <>
@@ -115,14 +116,15 @@ const ShopkeeperDetails = () => {
           <p className="subtitle">Detailed profile and financial summary.</p>
           <div className="info-grid">
             <div>
-              <strong>Name:</strong> {decrypt(user?.firstName || '')} {decrypt(user?.lastName || '')}
+              <strong>Name:</strong> {decrypt(user?.firstName || "")}{" "}
+              {decrypt(user?.lastName || "")}
             </div>
 
-            {/* <div>
-              <strong>User ID:</strong> {user?.userId}
-            </div> */}
             <div>
-              <strong>Email:</strong> {decrypt(user?.email || '')}
+              <strong>User ID:</strong> {user?.userId}
+            </div>
+            <div>
+              <strong>Device Name:</strong> {decrypt(user?.deviceName || "")}
             </div>
             <div>
               <strong>Total Chai:</strong> {user?.chai}

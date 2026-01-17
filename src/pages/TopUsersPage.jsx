@@ -11,6 +11,11 @@ import { env } from "../utils/config.js";
 const TopUsersPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [filter, setFilter] = useState(2);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userType = queryParams.get("userType"); // e.g., "merchant"
@@ -19,22 +24,48 @@ const TopUsersPage = () => {
   useEffect(() => {
     // ye function tab chalega jab page (component) load hoga
     const fetchTopUsers = async () => {
+      if (!userType) return;
+      setLoading(true);
       try {
         const res = await axios.post(
-          `${env.BASE_URL}/admin/get-top-users`,
-          { userType },
+          `${env.BASE_URL}/admin/get-top-users?limit=${limit}&filter=${filter}&page=${page}`,
+          { userType, limit, filter, page },
           {
             withCredentials: true,
           }
         );
         console.log("res", res);
-        setUser(res.data.data);
+
+        // Normalize response shape to avoid runtime crashes
+        const raw = res?.data?.data ?? {};
+        const topUsers = raw?.topUsers ?? raw?.data?.topUsers ?? [];
+        const count = raw?.count ?? raw?.data?.count ?? 0;
+        const apiTotalPages = raw?.totalPages ?? raw?.data?.totalPages ?? 1;
+        const apiCurrentPage = raw?.currentPage ?? raw?.data?.currentPage ?? page;
+        setUser({
+          count: typeof count === "number" ? count : Number(count) || 0,
+          topUsers: Array.isArray(topUsers) ? topUsers : [],
+        });
+        setTotalPages(
+          typeof apiTotalPages === "number"
+            ? apiTotalPages
+            : Number(apiTotalPages) || 1
+        );
+        setPage(
+          typeof apiCurrentPage === "number"
+            ? apiCurrentPage
+            : Number(apiCurrentPage) || 1
+        );
       } catch (err) {
         console.error("Error fetching stats:", err);
+        setUser({ count: 0, topUsers: [] });
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
       }
     };
     fetchTopUsers();
-  }, []);
+  }, [userType, limit, filter, page]);
 
   // useEffect(() => {
   //   console.log(user);
@@ -65,25 +96,80 @@ const TopUsersPage = () => {
     <>
       <Header />
 
+      <div className="topusers-controls">
+        <div className="topusers-controls-left">
+          <span className="topusers-title">Top Users</span>
+          <span className="topusers-subtitle">
+            Total: {user?.count ?? 0} | Showing {(user?.topUsers ?? []).length}
+          </span>
+        </div>
+
+        <div className="topusers-controls-right">
+          <label className="topusers-label" htmlFor="topusers-filter">
+            Filter
+          </label>
+          <select
+            id="topusers-filter"
+            className="topusers-select"
+            value={filter}
+            onChange={(e) => {
+              setFilter(Number(e.target.value));
+              setPage(1);
+            }}
+          >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+            <option value={30}>30</option>
+            <option value={45}>45</option>
+          </select>
+
+          <label className="topusers-label" htmlFor="topusers-limit">
+            Limit
+          </label>
+          <select
+            id="topusers-limit"
+            className="topusers-select"
+            value={limit}
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+              setPage(1);
+            }}
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={40}>40</option>
+            <option value={50}>50</option>
+          </select>
+          {loading ? <span className="topusers-loading">Loading…</span> : null}
+        </div>
+      </div>
+
       <div className="shopkeeper-containers">
-        {user?.topUsers.map((shop) => {
+        {(user?.topUsers ?? []).map((shop) => {
           // Calculate percentages safely
           const success = shop.performance?.success || 0;
           const serverError = shop.performance?.server_error || 0;
           const badRequest = shop.performance?.bad_request || 0;
           const total = success + serverError + badRequest;
-          
-          const successPercent = total > 0 ? ((success / total) * 100).toFixed(0) : "0";
-          const errorPercent = total > 0 ? ((serverError / total) * 100).toFixed(0) : "0";
-          const badPercent = total > 0 ? ((badRequest / total) * 100).toFixed(0) : "0";
+
+          const successPercent =
+            total > 0 ? ((success / total) * 100).toFixed(0) : "0";
+          const errorPercent =
+            total > 0 ? ((serverError / total) * 100).toFixed(0) : "0";
+          const badPercent =
+            total > 0 ? ((badRequest / total) * 100).toFixed(0) : "0";
           // const apiPercent = total > 0 ? ((shop.performance?.api || 0) / total * 100).toFixed(0) : "0";
 
           return (
             <div key={shop.id} className="shop-card">
               <h3 className="shop-name">
-                {decrypt(shop.firstName || '')} {decrypt(shop.lastName || '')}
+                {decrypt(shop.firstName || "")} {decrypt(shop.lastName || "")}
               </h3>
-              <div className="chart-section">
+              <h5>Total Chai: {shop.chai}</h5>
+              {/* <div className="chart-section">
                 <PieChart width={230} height={230}>
                   <Pie
                     data={getPieData(shop.performance)}
@@ -112,10 +198,9 @@ const TopUsersPage = () => {
                   <p style={{ color: "#ff00c3ff" }}>
                     Bad Request: {badPercent}%
                   </p>
-                  {/* <p style={{ color: "#3b82f6" }}>API Calls: {apiPercent}%</p> */}
                 </div>
-              </div>
-              <table className="activity-table">
+              </div> */}
+              {/* <table className="activity-table">
                 <thead>
                   <tr>
                     <th className="time">Start Time</th>
@@ -125,23 +210,31 @@ const TopUsersPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {shop.logs.map((a, i) => (
-                    <tr key={i}>
-                      <td>{new Date(a.time).toLocaleString()}</td>
-                      <td>
-                        <span className={`badge ${a.type}`}>
-                          {a.type.replace("_", " ")}
-                        </span>
+                  {(shop.logs ?? []).length === 0 ? (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: "center" }}>
+                        No logs available.
                       </td>
-                      <td>{a.message}</td>
-                      <td>{a.timeTaken}</td>
                     </tr>
-                  ))}
+                  ) : (
+                    (shop.logs ?? []).map((a, i) => (
+                      <tr key={i}>
+                        <td>{new Date(a.time).toLocaleString()}</td>
+                        <td>
+                          <span className={`badge ${a.type}`}>
+                            {a.type.replace("_", " ")}
+                          </span>
+                        </td>
+                        <td>{a.message}</td>
+                        <td>{a.timeTaken}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
-              </table>
+              </table> */}
               <button
                 className="view-btn"
-                onClick={() => navigate(`/user-details?userId=${shop.userId}`)}
+                onClick={() => navigate(`/user-details?userId=${shop._id}`)}
                 // onClick={() => navigate(`/shopkeepers-details?userId=${id}`)}
               >
                 View More
@@ -149,6 +242,26 @@ const TopUsersPage = () => {
             </div>
           );
         })}
+      </div>
+
+      <div className="topusers-pagination">
+        <button
+          className="topusers-pagebtn"
+          disabled={loading || page <= 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+        >
+          Prev
+        </button>
+        <span className="topusers-pageinfo">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className="topusers-pagebtn"
+          disabled={loading || page >= totalPages}
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+        >
+          Next
+        </button>
       </div>
     </>
   );

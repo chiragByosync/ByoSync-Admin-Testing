@@ -9,7 +9,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import Logs from "./pages/Logs.jsx";
 import Notification from "./pages/Notification.jsx";
 import DeleteUser from "./pages/DeleteUser.jsx";
-
+import ChaiDevice from "./pages/ChaiDevice.jsx";
 const App = () => {
   return (
     <AuthProvider>
@@ -61,6 +61,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <DeleteUser />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chai-device"
+            element={
+              <ProtectedRoute>
+                <ChaiDevice />
               </ProtectedRoute>
             }
           />

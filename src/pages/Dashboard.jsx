@@ -61,6 +61,12 @@ const Dashboard = () => {
             >
               View More
             </button>
+            <button
+              className="view-btn"
+              onClick={() => navigate("/chai-device")}
+            >
+              View Chai Device
+            </button>
           </div>
 
           {/* logs Panel */}

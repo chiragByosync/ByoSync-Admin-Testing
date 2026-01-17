@@ -1,0 +1,110 @@
+.chai-device-page {
+  background: #fafafa;
+  min-height: 100vh;
+  padding: 18px 40px 40px 40px;
+  box-sizing: border-box;
+  color: #111827; /* override global dark text */
+  font-family: "Poppins", sans-serif;
+}
+
+.chai-device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.chai-device-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.chai-device-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.chai-device-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+
+.chai-device-loading,
+.chai-device-empty {
+  padding: 18px 14px;
+  color: #374151;
+}
+
+.chai-device-tablewrap {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: auto;
+}
+
+.chai-device-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.chai-device-table th,
+.chai-device-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: top;
+  color: #111827;
+}
+
+.chai-device-table th {
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+}
+
+.chai-device-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+}
+
+.chai-device-details {
+  margin-top: 6px;
+}
+
+.chai-device-details summary {
+  cursor: pointer;
+  color: #2563eb;
+  font-weight: 600;
+  user-select: none;
+}
+
+.chai-device-pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0b1220;
+  color: #e5e7eb;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 8px 0 0 0;
+  max-height: 220px;
+  overflow: auto;
+}
+
+@media (max-width: 520px) {
+  .chai-device-page {
+    padding: 14px 16px 30px 16px;
+  }
+}
+
+

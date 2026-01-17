@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
-  padding: 30px 60px;
+  padding: 30px 40px;
   justify-content: center;
   background: #fafafa;
   width: 100%;
@@ -12,12 +12,122 @@
   font-family: "Poppins", sans-serif;
 }
 
+.topusers-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 40px 0 40px;
+  background: #fafafa;
+  color: black;
+  font-family: "Poppins", sans-serif;
+}
+
+.topusers-controls-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.topusers-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.topusers-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.topusers-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.topusers-label {
+  font-size: 14px;
+  color: #374151;
+}
+
+.topusers-select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  color: #111827; /* important: prevent white-on-white text in dark color-scheme */
+  min-width: 84px;
+  line-height: 1.2;
+  appearance: auto;
+}
+
+.topusers-loading {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.topusers-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 40px 28px 40px;
+  background: #fafafa;
+}
+
+.topusers-pagebtn {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #111827; /* important: prevent white-on-white text */
+  font-weight: 600;
+}
+
+.topusers-pagebtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.topusers-pagebtn:hover:not(:disabled) {
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.topusers-pageinfo {
+  font-size: 14px;
+  color: #374151;
+}
+
+@media (max-width: 520px) {
+  .topusers-controls {
+    padding: 14px 16px 0 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topusers-controls-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .topusers-pagination {
+    padding: 10px 16px 22px 16px;
+  }
+}
+
 .shop-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 24px;
-  width: 600px;
+  width: 300px;
 }
 
 .shop-name {
