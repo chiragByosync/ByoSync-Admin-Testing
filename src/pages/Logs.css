@@ -58,6 +58,53 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+.logs-summary-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 18px;
+}
+
+.logs-summary-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.logs-summary-meta {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.logs-summary-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  overflow-x: auto;
+}
+
+.logs-summary-chart {
+  flex: 0 0 auto;
+}
+
+.logs-percent-list {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;
+}
+
+.logs-percent-row {
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .logs-table-card h3 {
   margin-bottom: 10px;
   color: #111827;
@@ -90,6 +137,38 @@
   text-align: center;
   color: #9ca3af;
   padding: 20px 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.badge.SUCCESS {
+  background: #22c55e;
+}
+.badge.PERFORMANCE {
+  background: #22c55e;
+}
+
+.badge.ERROR,
+.badge.SERVER_ERROR {
+  background: #ef4444;
+}
+
+.badge.BAD_REQUEST {
+  background: #ff00c3ff;
+}
+
+.badge.API_CALL {
+  background: #3b82f6;
 }
 
 .badge.MIDDLEWARE_CALL {

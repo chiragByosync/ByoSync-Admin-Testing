@@ -236,7 +236,7 @@ const ShopkeeperDetails = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Start Time</th>
+                  {/* <th>Start Time</th> */}
                   <th>Type</th>
                   <th>Message</th>
                   <th>Time Taken</th>
@@ -245,7 +245,7 @@ const ShopkeeperDetails = () => {
               <tbody>
                 {user?.logs.map((log, i) => (
                   <tr key={i}>
-                    <td>{new Date(log.time).toLocaleString()}</td>
+                    {/* <td>{new Date(log.time).toLocaleString()}</td> */}
                     <td>
                       <span className={`badge ${log.type}`}>
                         {log.type.replace("_", " ")}
